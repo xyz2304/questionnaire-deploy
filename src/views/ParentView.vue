@@ -1,36 +1,36 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import NavBar from "../components/NavBarComponent.vue";
-
-
+import { ref, onMounted, onUnmounted } from "vue";
+import NavBar from "@/components/NavBarComponent.vue";
 
 const results = ref([]);
 const selectedResult = ref(null);
 onMounted(() => {
   // Récupérer les résultats depuis le localStorage
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith('result-')) {
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith("result-")) {
       const resultData = JSON.parse(localStorage.getItem(key));
-      results.value.push({ ...resultData, id: key, storyName: resultData.storyName });
+      results.value.push({
+        ...resultData,
+        id: key,
+        storyName: resultData.storyName,
+      });
     }
   });
 });
 const showDetails = (resultId) => {
-  const result = results.value.find(r => r.id === resultId);
+  const result = results.value.find((r) => r.id === resultId);
   if (result) {
     selectedResult.value = result;
   }
 };
 const removeAllResults = () => {
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith('result-')) {
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith("result-")) {
       localStorage.removeItem(key);
     }
   });
   results.value = []; // Réinitialiser l'affichage
 };
-
-
 </script>
 
 <template>
@@ -38,7 +38,12 @@ const removeAllResults = () => {
     <NavBar json_name="NavBarParentData.json" />
   </header>
   <main class="container mt-5">
-    <div v-for="result in results" :key="result.id" @click="showDetails(result.id)" class="card mb-3 cursor-pointer">
+    <div
+      v-for="result in results"
+      :key="result.id"
+      @click="showDetails(result.id)"
+      class="card mb-3 cursor-pointer"
+    >
       <div class="card-body">
         <h5 class="card-title">التلميذ: {{ result.childName }}</h5>
         <h5>القصة: {{ result.storyName }}</h5>
@@ -48,18 +53,31 @@ const removeAllResults = () => {
     <div v-if="selectedResult" class="mt-4 questionnaire">
       <h3>تفاصيل الإجابات لـ {{ selectedResult.childName }}</h3>
       <p>القصة: {{ selectedResult.storyName }}</p>
-      <p>النتيجة: {{ selectedResult.score }} / {{ selectedResult.questions.length }}</p>
+      <p>
+        النتيجة: {{ selectedResult.score }} /
+        {{ selectedResult.questions.length }}
+      </p>
       <div v-for="(question, index) in selectedResult.questions" :key="index">
         <p>{{ question.question }}</p>
         <ul>
-          <li v-for="option in question.options" :key="option"
-            :class="{ 'correct': option === question.correct_response, 'incorrect': selectedResult.answers[index] === option && option !== question.correct_response }">
+          <li
+            v-for="option in question.options"
+            :key="option"
+            :class="{
+              correct: option === question.correct_response,
+              incorrect:
+                selectedResult.answers[index] === option &&
+                option !== question.correct_response,
+            }"
+          >
             {{ option }}
           </li>
         </ul>
       </div>
     </div>
-    <button v-if="results.length > 0" @click="removeAllResults">حذف كل الإختبارات</button>
+    <button v-if="results.length > 0" @click="removeAllResults">
+      حذف كل الإختبارات
+    </button>
   </main>
 </template>
 

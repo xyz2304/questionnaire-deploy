@@ -1,6 +1,6 @@
 [
- {
-    "id": "/accueil",
+  {
+    "id": "/",
     "name": "تسجيل الخروج",
     "action": "logout"
   }

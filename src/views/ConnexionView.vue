@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import NavBar from "../components/NavBarComponent.vue";
+import NavBar from "@/components/NavBarComponent.vue";
 
 const credentials = ref({
   username: "",
@@ -11,14 +11,22 @@ const selectedChoice = ref(null);
 const router = useRouter();
 
 const login = () => {
-  if (credentials.value.username === 'eleveUsername' && credentials.value.password === 'password' && selectedChoice.value === 'choix1') {
-    localStorage.setItem('userStatus', 'eleve_ok');
-    router.push('/eleve');
-  } else if (credentials.value.username === 'parentUsername' && credentials.value.password === 'password' && selectedChoice.value === 'choix2') {
-    localStorage.setItem('userStatus', 'parent_ok');
-    router.push('/parent');
+  if (
+    credentials.value.username === "eleveUsername" &&
+    credentials.value.password === "password" &&
+    selectedChoice.value === "choix1"
+  ) {
+    localStorage.setItem("userStatus", "eleve_ok");
+    router.push("/questionnaire-deploy/eleve");
+  } else if (
+    credentials.value.username === "parentUsername" &&
+    credentials.value.password === "password" &&
+    selectedChoice.value === "choix2"
+  ) {
+    localStorage.setItem("userStatus", "parent_ok");
+    router.push("/questionnaire-deploy/parent");
   } else {
-    alert('لم تعطني معلومات صحيحة للدخول إلى صفحتك. عليها أن تكون صحيحة !!');
+    alert("لم تعطني معلومات صحيحة للدخول إلى صفحتك. عليها أن تكون صحيحة !!");
   }
 };
 </script>
@@ -32,22 +40,46 @@ const login = () => {
     <form @submit.prevent="login">
       <div class="mb-3">
         <label for="username" class="form-label">البريد الإلكتروني</label>
-        <input type="text" class="form-control" id="username" v-model="credentials.username" required />
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          v-model="credentials.username"
+          required
+        />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">كلمة السر</label>
-        <input type="password" class="form-control" id="password" v-model="credentials.password" required />
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          v-model="credentials.password"
+          required
+        />
       </div>
       <div class="mb-3">
         <label class="form-label">هل أنت تلميذ ام وليّ ؟</label>
         <div class="form-check">
-          <input type="radio" class="form-check-input" id="choix1" value="choix1" v-model="selectedChoice"
-            name="choix" />
+          <input
+            type="radio"
+            class="form-check-input"
+            id="choix1"
+            value="choix1"
+            v-model="selectedChoice"
+            name="choix"
+          />
           <label class="form-check-label" for="choix1">تلميذ</label>
         </div>
         <div class="form-check">
-          <input type="radio" class="form-check-input" id="choix2" value="choix2" v-model="selectedChoice"
-            name="choix" />
+          <input
+            type="radio"
+            class="form-check-input"
+            id="choix2"
+            value="choix2"
+            v-model="selectedChoice"
+            name="choix"
+          />
           <label class="form-check-label" for="choix2">وليّ</label>
         </div>
       </div>
@@ -57,7 +89,8 @@ const login = () => {
 </template>
 <style scoped>
 .main {
-  background: no-repeat center center fixed url('/path-to-your-background-image.jpg');
+  background: no-repeat center center fixed
+    url("/path-to-your-background-image.jpg");
   background-size: cover;
   min-height: 100vh;
 }
@@ -99,7 +132,7 @@ const login = () => {
 h2 {
   color: #ff8c00;
   text-align: center;
-  font-family: 'Fredoka One', cursive;
+  font-family: "Fredoka One", cursive;
 }
 
 /* Adaptation spécifique pour l'alerte */

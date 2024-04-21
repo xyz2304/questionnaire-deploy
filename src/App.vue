@@ -1,10 +1,10 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import AccueilView from "./views/AccueilView.vue";
-import ParentView from "./views/ParentView.vue";
-import EleveView from "./views/EleveView.vue";
-import ConnexionView from "./views/ConnexionView.vue";
+import AccueilView from "@/views/AccueilView.vue";
+import ParentView from "@/views/ParentView.vue";
+import EleveView from "@/views/EleveView.vue";
+import ConnexionView from "@/views/ConnexionView.vue";
 
 const route = useRoute();
 const viewsMapping = {

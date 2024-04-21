@@ -1,6 +1,6 @@
 [
   {
-    "id": "/accueil",
+    "id": "/questionnaire-deploy",
     "name": "تسجيل الخروج",
     "action": "logout"
   }

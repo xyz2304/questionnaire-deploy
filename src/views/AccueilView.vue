@@ -1,6 +1,6 @@
 <script setup>
-import livres from "../data/livresData.json";
-import NavBar from "../components/NavBarComponent.vue";
+import livres from "@/data/livresData.json";
+import NavBar from "@/components/NavBarComponent.vue";
 </script>
 
 <template>
@@ -33,7 +33,6 @@ import NavBar from "../components/NavBarComponent.vue";
   </main>
 </template>
 
-
 <style scoped>
 .card {
   border-radius: 15px;
@@ -41,7 +40,7 @@ import NavBar from "../components/NavBarComponent.vue";
   overflow: hidden;
   transition: transform 0.3s ease;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  background: #FFF;
+  background: #fff;
 }
 
 .card:hover {
@@ -51,7 +50,7 @@ import NavBar from "../components/NavBarComponent.vue";
 
 .card-title {
   color: #333;
-  font-family: 'Fredoka One', cursive;
+  font-family: "Fredoka One", cursive;
 }
 
 .card-body {
@@ -69,12 +68,12 @@ import NavBar from "../components/NavBarComponent.vue";
 
 h1 {
   color: #5cacee;
-  font-family: 'Fredoka One', cursive;
+  font-family: "Fredoka One", cursive;
 }
 
 h2,
 .lead {
-  font-family: 'Fredoka One', cursive;
+  font-family: "Fredoka One", cursive;
   color: #333;
 }
 </style>

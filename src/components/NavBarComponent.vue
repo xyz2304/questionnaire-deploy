@@ -13,7 +13,7 @@ const dataFiles = {
   "NavBarEleveData.json": dataEleve,
   "NavBarParentData.json": dataParent,
 };
-
+const show = ref(false)
 const props = defineProps<{
   /*
    * Nom du json a partir duquel on extrait les items
@@ -53,10 +53,11 @@ const handleAction = (item) => {
         aria-controls="navbarNav"
         aria-expanded="false"
         aria-label="Toggle navigation"
+        @click="show = !show"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse" id="navbarNav" :class="{'show': show==true}">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item" v-for="item in data" :key="item.id">
             <router-link

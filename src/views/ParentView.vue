@@ -38,12 +38,7 @@ const removeAllResults = () => {
     <NavBar json_name="NavBarParentData.json" />
   </header>
   <main class="container mt-5">
-    <div
-      v-for="result in results"
-      :key="result.id"
-      @click="showDetails(result.id)"
-      class="card mb-3 cursor-pointer"
-    >
+    <div v-for="result in results" :key="result.id" @click="showDetails(result.id)" class="card mb-3 cursor-pointer">
       <div class="card-body">
         <h5 class="card-title">التلميذ: {{ result.childName }}</h5>
         <h5>القصة: {{ result.storyName }}</h5>
@@ -52,24 +47,20 @@ const removeAllResults = () => {
     </div>
     <div v-if="selectedResult" class="mt-4 questionnaire">
       <h3>تفاصيل الإجابات لـ {{ selectedResult.childName }}</h3>
-      <p>القصة: {{ selectedResult.storyName }}</p>
-      <p>
+      <h5>القصة: {{ selectedResult.storyName }}</h5>
+      <h5 class="mb-5">
         النتيجة: {{ selectedResult.score }} /
         {{ selectedResult.questions.length }}
-      </p>
+      </h5>
       <div v-for="(question, index) in selectedResult.questions" :key="index">
-        <p>{{ question.question }}</p>
+        <p class="fw-bold">{{ question.question }}</p>
         <ul>
-          <li
-            v-for="option in question.options"
-            :key="option"
-            :class="{
-              correct: option === question.correct_response,
-              incorrect:
-                selectedResult.answers[index] === option &&
-                option !== question.correct_response,
-            }"
-          >
+          <li v-for="option in question.options" :key="option" :class="{
+      correct: option === question.correct_response,
+      incorrect:
+        selectedResult.answers[index] === option &&
+        option !== question.correct_response,
+    }">
             {{ option }}
           </li>
         </ul>

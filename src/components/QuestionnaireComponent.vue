@@ -20,6 +20,7 @@ const responseGiven = ref({});
 const score = ref(0);
 const scorePercentage = ref(0);
 const resultGif = ref("");
+const fullName = ref('');
 
 const fetchQuestions = async () => {
   const module = await import(`@/data/${props.jsonName}.json`);
@@ -90,7 +91,7 @@ const submitAnswers = () => {
   isSubmitted.value = true;
   const finalScore = calculateScore(selectedAnswers.value, questions.value);
   const resultData = {
-    childName: "أحمد التونسي",
+    childName: fullName.value,
     storyName: titre.value,
     answers: selectedAnswers.value,
     score: finalScore,
@@ -114,6 +115,8 @@ const playSound = (isCorrect) => {
 </script>
 <template>
   <div class="questionnaire p-2">
+    <label for="name">الإسم و اللقب</label><br>
+    <input class="mb-2" type="text" v-model="fullName">
     <h4 class="fw-bold">
       إختر الإجابة الصحيحة لكلّ سؤال. الإختيار نهائي, فلا تتعجل. إن مع التّأنّي
       السلامة و مع العجلة الندامة😉

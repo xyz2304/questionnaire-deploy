@@ -6,8 +6,8 @@ const ctx = ref(null);
 const painting = ref(false);
 const color = ref('#000000');
 const brushSize = ref(5);
-const canvasWidth = ref(800);
-const canvasHeight = ref(600);
+const canvasWidth = ref(window.innerWidth * 0.8);  // 80% de la largeur de l'écran
+const canvasHeight = ref(window.innerHeight * 0.6); // 60% de la hauteur de l'écran
 const image = new Image();
 
 const props = defineProps({
@@ -15,7 +15,10 @@ const props = defineProps({
 });
 const imagePath = ref('');
 
-
+const resizeCanvas = () => {
+  canvasWidth.value = window.innerWidth * 0.8;
+  canvasHeight.value = window.innerHeight * 0.6;
+};
 
 // Fonction pour charger et redimensionner l'image
 const loadImage = () => {

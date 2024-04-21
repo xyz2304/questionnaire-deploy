@@ -8,6 +8,7 @@ import congratsSound from "@/audio/congrats.mp3";
 import canDoBetterSound from "@/audio/canDoBetter.mp3";
 import failureSound from "@/audio/failureResult.mp3";
 
+
 const props = defineProps({
   jsonName: String,
 });
@@ -21,6 +22,7 @@ const score = ref(0);
 const scorePercentage = ref(0);
 const resultGif = ref("");
 const fullName = ref('');
+const inputText = ref('');
 
 const fetchQuestions = async () => {
   const module = await import(`@/data/${props.jsonName}.json`);
@@ -88,6 +90,7 @@ const downloadPdf = async () => {
 };
 
 const submitAnswers = () => {
+  console.log(inputText.value)
   isSubmitted.value = true;
   const finalScore = calculateScore(selectedAnswers.value, questions.value);
   const resultData = {
@@ -96,6 +99,7 @@ const submitAnswers = () => {
     answers: selectedAnswers.value,
     score: finalScore,
     questions: questions.value,
+    responseText: inputText.value,
   };
 
   const resultId = `result-${Date.now()}-${props.jsonName}`;
@@ -117,13 +121,13 @@ const playSound = (isCorrect) => {
   <div class="questionnaire p-2">
     <label for="name">الإسم و اللقب</label><br>
     <input class="mb-2" type="text" v-model="fullName">
-    <h4 class="fw-bold">
+    <h4 class="fw-bold mb-5">
       إختر الإجابة الصحيحة لكلّ سؤال. الإختيار نهائي, فلا تتعجل. إن مع التّأنّي
       السلامة و مع العجلة الندامة😉
     </h4>
     <form @submit.prevent="submitAnswers">
       <div v-for="(question, index) in questions" :key="index" class="mb-3">
-        <div class="fw-bold">{{ question.question }}</div>
+        <div class="fw-bold"><h4>{{ question.question }}</h4></div>
         <div v-for="(option, i) in question.options" :key="i" class="form-check">
           <input type="radio" class="form-check-input" :id="`question_${index}_option_${i}`" :name="`question_${index}`"
             :value="option" :disabled="responseGiven[index]" v-model="selectedAnswers[index]"
@@ -142,6 +146,10 @@ const playSound = (isCorrect) => {
       ">✗</template>
           </span>
         </div>
+      </div>
+      <div class="mb-3">
+        <h5>إقترح نهاية جديدة لقصة : {{ titre }}</h5>
+        <textarea v-model="inputText" rows="4" cols="50"></textarea>
       </div>
       <div class="text-center mt-3">
         <button type="submit" class="btn btn-primary" v-if="!isSubmitted">
@@ -229,5 +237,16 @@ const playSound = (isCorrect) => {
 
 .fw-bold {
   font-weight: bold;
+}
+
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fafafa;
+  resize: vertical;
+  font-family: Arial, sans-serif;
 }
 </style>

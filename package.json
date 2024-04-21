@@ -8,13 +8,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "serve": "vite serve",
-    "deploy":"sh deploy.sh"
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "aos": "^2.3.4",
     "bootstrap": "^5.3.3",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "recorder-js": "^1.0.7",
     "three": "^0.160.1",
     "vue": "^3.3.11",
     "vue-awesome-paginate": "^1.1.46",

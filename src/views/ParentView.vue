@@ -53,17 +53,24 @@ const removeAllResults = () => {
         {{ selectedResult.questions.length }}
       </h5>
       <div v-for="(question, index) in selectedResult.questions" :key="index">
-        <p class="fw-bold">{{ question.question }}</p>
+        <h4>{{ question.question }}</h4>
         <ul>
-          <li v-for="option in question.options" :key="option" :class="{
-      correct: option === question.correct_response,
-      incorrect:
-        selectedResult.answers[index] === option &&
-        option !== question.correct_response,
-    }">
+          <li class="fw-bold" v-for="option in question.options" :key="option" :class="{
+          correct: option === question.correct_response,
+          incorrect:
+            selectedResult.answers[index] === option &&
+            option !== question.correct_response,
+              }">
             {{ option }}
           </li>
         </ul>
+      </div>
+      <div class="mt-5" v-if="selectedResult.responseText">
+        <h5 style="color: #000080;">:الإجابة التي تمّ تسجيلها من قبـل التلميذ</h5>
+        <p>{{ selectedResult.responseText }}</p>
+      </div>
+      <div class="mt-5" v-else>
+        <h5 style="color:#8B0000">لم يجب التلميذ على السؤال الأخير</h5>
       </div>
     </div>
     <button v-if="results.length > 0" @click="removeAllResults">

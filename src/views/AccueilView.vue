@@ -18,13 +18,21 @@ import NavBar from "@/components/NavBarComponent.vue";
       <h2 class="mb-4">مجموعة القصص</h2>
       <div class="row g-4 row justify-content-center">
         <div class="col-md-4" v-for="livre in livres" :key="livre.id">
-          <div class="card h-100">
-            <div class="card-body">
+          <div class="card h-100 text-center"> <!-- Ajout de text-center pour centrer le texte et les images -->
+            <div class="card-header">
               <h5 class="card-title">{{ livre.titre }}</h5>
-              <p class="card-text">{{ livre.description }}</p>
             </div>
-            <div class="card-footer">
-              <small class="text-muted">الكاتب : {{ livre.auteur }}</small>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+              <!-- Flexbox pour centrer verticalement et horizontalement -->
+              <p class="card-text">{{ livre.description }}</p>
+              <!-- Conditionally display image based on title -->
+              <img v-if="livre.titre === 'حلم فراشة'" src="@/gifs/papillonLivre.jpeg" class="img-fluid rounded my-2"
+                alt="Image de papillon" /> <!-- img-fluid pour responsive design -->
+              <img v-if="livre.titre === 'بطوط يبحث عن مهنة'" src="@/gifs/donaldLivre.jpeg"
+                class="img-fluid rounded my-2" alt="Image de Donald" />
+            </div>
+            <div class="card-footer text-muted"> <!-- text-muted pour le style du texte -->
+              الكاتب : {{ livre.auteur }}
             </div>
           </div>
         </div>

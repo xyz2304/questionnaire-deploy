@@ -26,10 +26,8 @@ onMounted(async () => {
   if (props.json_name) {
     try {
       const dataName = props.json_name;
-      console.log(dataName);
       const module = dataFiles[dataName];
       data.value = module;
-      console.log(data);
     } catch (error) {
       console.error("Failed to load JSON data:", error);
     }

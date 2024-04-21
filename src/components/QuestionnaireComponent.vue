@@ -27,6 +27,7 @@ const fetchQuestions = async () => {
   questions.value.forEach((_, index) => {
     responseGiven.value[index] = false;
   });
+  titre.value = module.titre
 };
 
 onMounted(fetchQuestions);
@@ -39,7 +40,6 @@ const updateResultGif = () => {
   } else {
     resultGif.value = "@/gifs/failure.gif";
   }
-  console.log(resultGif.value);
 };
 
 const calculateScore = () => {
@@ -55,6 +55,7 @@ const calculateScore = () => {
   );
   playResultSound();
   updateResultGif();
+  return score.value
 };
 
 const playResultSound = () => {
@@ -120,44 +121,22 @@ const playSound = (isCorrect) => {
     <form @submit.prevent="submitAnswers">
       <div v-for="(question, index) in questions" :key="index" class="mb-3">
         <div class="fw-bold">{{ question.question }}</div>
-        <div
-          v-for="(option, i) in question.options"
-          :key="i"
-          class="form-check"
-        >
-          <input
-            type="radio"
-            class="form-check-input"
-            :id="`question_${index}_option_${i}`"
-            :name="`question_${index}`"
-            :value="option"
-            :disabled="responseGiven[index]"
-            v-model="selectedAnswers[index]"
-            @change="handleOptionChange(index, option)"
-          />
-          <label
-            class="form-check-label"
-            :for="`question_${index}_option_${i}`"
-            >{{ option }}</label
-          >
+        <div v-for="(option, i) in question.options" :key="i" class="form-check">
+          <input type="radio" class="form-check-input" :id="`question_${index}_option_${i}`" :name="`question_${index}`"
+            :value="option" :disabled="responseGiven[index]" v-model="selectedAnswers[index]"
+            @change="handleOptionChange(index, option)" />
+          <label class="form-check-label" :for="`question_${index}_option_${i}`">{{ option }}</label>
           <!-- Icones de réponse juste ou fausse -->
-          <span
-            v-if="responseGiven[index]"
-            :class="{
-              'text-success': option === question.correct_response,
-              'text-danger':
-                selectedAnswers[index] === option &&
-                option !== question.correct_response,
-            }"
-          >
+          <span v-if="responseGiven[index]" :class="{
+      'text-success': option === question.correct_response,
+      'text-danger':
+        selectedAnswers[index] === option &&
+        option !== question.correct_response,
+    }">
             <template v-if="option === question.correct_response">✓</template>
-            <template
-              v-if="
-                selectedAnswers[index] === option &&
-                option !== question.correct_response
-              "
-              >✗</template
-            >
+            <template v-if="selectedAnswers[index] === option &&
+      option !== question.correct_response
+      ">✗</template>
           </span>
         </div>
       </div>
@@ -168,21 +147,10 @@ const playSound = (isCorrect) => {
       </div>
     </form>
     <div v-if="isSubmitted" class="result-animation">
-      <img
-        v-if="scorePercentage < 50"
-        src="@/gifs/failure.gif"
-        alt="Result Animation Failure"
-      />
-      <img
-        v-if="scorePercentage >= 50 && scorePercentage < 80"
-        src="@/gifs/canDoBetter.png"
-        alt="Result Animation Can Do Better"
-      />
-      <img
-        v-if="scorePercentage >= 80"
-        src="@/gifs/congrats.gif"
-        alt="Result Animation Congrats"
-      />
+      <img v-if="scorePercentage < 50" src="@/gifs/failure.gif" alt="Result Animation Failure" />
+      <img v-if="scorePercentage >= 50 && scorePercentage < 80" src="@/gifs/canDoBetter.png"
+        alt="Result Animation Can Do Better" />
+      <img v-if="scorePercentage >= 80" src="@/gifs/congrats.gif" alt="Result Animation Congrats" />
     </div>
     <div class="mt-3 text-center" v-if="isSubmitted">
       <p class="fw-bold display-6">
@@ -191,10 +159,7 @@ const playSound = (isCorrect) => {
       <p class="fw-bold display-6" v-if="scorePercentage < 50">
         عليك قراءة القصة مرة أخرى😞ولا تيأس فستنجح في المرّة القادمة!
       </p>
-      <p
-        class="fw-bold display-6"
-        v-if="scorePercentage >= 50 && scorePercentage < 80"
-      >
+      <p class="fw-bold display-6" v-if="scorePercentage >= 50 && scorePercentage < 80">
         جيد😊 لكن يمكنك القيام بمجهود أكبر!
       </p>
       <p class="fw-bold display-6" v-if="scorePercentage >= 80">

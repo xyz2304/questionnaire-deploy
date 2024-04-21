@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
 import NavBar from "@/components/NavBarComponent.vue";
 
 const results = ref([]);

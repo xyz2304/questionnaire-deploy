@@ -1,0 +1,7 @@
+[
+  {
+    "id": "/accueil",
+    "name": "تسجيل الخروج",
+    "action": "logout"
+  }
+]

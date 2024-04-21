@@ -149,7 +149,7 @@ const playSound = (isCorrect) => {
       </div>
       <div class="mb-3">
         <h5>إقترح نهاية جديدة لقصة : {{ titre }}</h5>
-        <textarea v-model="inputText" rows="4" cols="50"></textarea>
+        <textarea style="color:var(--bs-black);" v-model="inputText" rows="4" cols="50"></textarea>
       </div>
       <div class="text-center mt-3">
         <button type="submit" class="btn btn-primary" v-if="!isSubmitted">

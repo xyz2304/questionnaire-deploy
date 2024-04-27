@@ -26,7 +26,10 @@ const inputText = ref('');
 
 const fetchQuestions = async () => {
   const module = await import(`@/data/${props.jsonName}.json`);
-  questions.value = module.questions;
+  questions.value = module.questions.map((question, index) => ({
+    ...question,
+    uniqueId: `${question.id}-${index}` // Crée un identifiant unique en combinant l'ID de catégorie et l'index
+  }));
   questions.value.forEach((_, index) => {
     responseGiven.value[index] = false;
   });
@@ -47,19 +50,20 @@ const updateResultGif = () => {
 
 const calculateScore = () => {
   let correctAnswers = 0;
-  questions.value.forEach((question, index) => {
-    if (selectedAnswers.value[index] === question.correct_response) {
-      correctAnswers++;
+  questions.value.forEach((question) => {
+    if (selectedAnswers.value[question.uniqueId] === question.correct_response) {
+      correctAnswers++; // Incrémenter pour chaque réponse correcte
     }
   });
   score.value = correctAnswers;
   scorePercentage.value = Math.round(
     (correctAnswers / questions.value.length) * 100
-  );
-  playResultSound();
-  updateResultGif();
-  return score.value
+  ); // Calculer le pourcentage de bonnes réponses
+  playResultSound(); // Jouer un son basé sur le score
+  updateResultGif(); // Mettre à jour le GIF basé sur le score
+  return score.value; // Retourner le score pour d'autres utilisations éventuelles
 };
+
 
 const playResultSound = () => {
   let soundPath;
@@ -106,16 +110,29 @@ const submitAnswers = () => {
   localStorage.setItem(resultId, JSON.stringify(resultData));
 };
 
-const handleOptionChange = (index, option) => {
-  selectedAnswers.value[index] = option;
-  responseGiven.value[index] = true; // Marquer la réponse comme donnée
-  // Jouer son selon la correction de la réponse
-  playSound(option === questions.value[index].correct_response);
+const handleOptionChange = (question, option) => {
+  selectedAnswers.value[question.uniqueId] = option;
+  responseGiven.value[question.uniqueId] = true; // Marquer la réponse comme donnée
+  console.log(question.correct_response); // Log de la réponse correcte pour débogage
+  playSound(option === question.correct_response); // Jouer le son selon la correction de la réponse
 };
+
 const playSound = (isCorrect) => {
   const audio = new Audio(isCorrect ? correctSound : incorrectSound);
   audio.play();
 };
+
+const selectOption = (question, option) => {
+  console.log("option donnée : ", option); // Log de l'option choisie pour débogage
+  handleOptionChange(question, option); // Appel de la méthode existante qui gère la validation
+};
+
+const getResponseClass = (questionUniqueId) => {
+  if (!responseGiven.value[questionUniqueId]) return '';
+  return selectedAnswers.value[questionUniqueId] === questions.value.find(q => q.uniqueId === questionUniqueId).correct_response ? 'btn-success' : 'btn-danger';
+};
+
+
 </script>
 <template>
   <div class="questionnaire p-2">
@@ -126,27 +143,56 @@ const playSound = (isCorrect) => {
       السلامة و مع العجلة الندامة😉
     </h4>
     <form @submit.prevent="submitAnswers">
-      <div v-for="(question, index) in questions" :key="index" class="mb-3">
-        <div class="fw-bold"><h4>{{ question.question }}</h4></div>
+      <div v-for="question in questions.filter(q => q.id === 1)" :key="question.uniqueId" class="mb-3">
+        <div class="fw-bold">
+          <h4>{{ question.question }}</h4>
+        </div>
         <div v-for="(option, i) in question.options" :key="i" class="form-check">
-          <input type="radio" class="form-check-input" :id="`question_${index}_option_${i}`" :name="`question_${index}`"
-            :value="option" :disabled="responseGiven[index]" v-model="selectedAnswers[index]"
-            @change="handleOptionChange(index, option)" />
-          <label class="form-check-label" :for="`question_${index}_option_${i}`">{{ option }}</label>
+          <input type="radio" class="form-check-input" :id="`question_${question.uniqueId}_option_${i}`"
+            :name="`question_${question.uniqueId}`" :value="option" :disabled="responseGiven[question.uniqueId]"
+            v-model="selectedAnswers[question.uniqueId]" @change="handleOptionChange(question, option)" />
+          <label class="form-check-label" :for="`question_${question.uniqueId}_option_${i}`">{{ option }}</label>
           <!-- Icones de réponse juste ou fausse -->
-          <span v-if="responseGiven[index]" :class="{
+          <span v-if="responseGiven[question.uniqueId]" :class="{
       'text-success': option === question.correct_response,
       'text-danger':
-        selectedAnswers[index] === option &&
+        selectedAnswers[question.uniqueId] === option &&
         option !== question.correct_response,
     }">
             <template v-if="option === question.correct_response">✓</template>
-            <template v-if="selectedAnswers[index] === option &&
-      option !== question.correct_response
-      ">✗</template>
+            <template v-if="selectedAnswers[question.uniqueId] === option &&
+      option !== question.correct_response">✗</template>
           </span>
         </div>
       </div>
+
+      <div v-for="question in questions.filter(q => q.id === 2)" :key="question.uniqueId" class="mb-3 text-center">
+        <div class="fw-bold">
+          <h4>{{ question.question }}</h4>
+        </div>
+        <!-- Bouton pour la réponse choisie, devient rouge si la réponse est incorrecte -->
+        <button v-if="responseGiven[question.uniqueId]" class="btn"
+          :class="{ 'btn-success': selectedAnswers[question.uniqueId] === question.correct_response, 'btn-danger': selectedAnswers[question.uniqueId] !== question.correct_response }">
+          {{ selectedAnswers[question.uniqueId] }}
+        </button>
+        <!-- Si la réponse donnée est incorrecte, montrer le bouton de la bonne réponse en vert -->
+        <button
+          v-if="responseGiven[question.uniqueId] && selectedAnswers[question.uniqueId] !== question.correct_response"
+          class="btn btn-success">
+          {{ question.correct_response }}
+        </button>
+        <!-- Les boutons pour choisir une option, visibles uniquement avant qu'une réponse ne soit donnée -->
+        <div class="btn-group mt-2" v-if="!responseGiven[question.uniqueId]">
+          <button v-for="option in question.options" :key="option" class="btn btn-primary mx-1"
+            @click="selectOption(question, option)">
+            {{ option }}
+          </button>
+        </div>
+      </div>
+
+
+
+
       <div class="mb-3">
         <h5>إقترح نهاية جديدة لقصة : {{ titre }}</h5>
         <textarea style="color:var(--bs-black);" v-model="inputText" rows="4" cols="50"></textarea>

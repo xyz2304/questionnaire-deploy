@@ -3,6 +3,7 @@ import AccueilView from '@/views/AccueilView.vue'
 import EleveView from '@/views/EleveView.vue'
 import ParentView from '@/views/ParentView.vue'
 import ConnexionView from '@/views/ConnexionView.vue'
+import VideoView from '@/views/VideoView.vue'
 const routes = [
 
   {
@@ -28,6 +29,12 @@ const routes = [
     name: 'وليّ',
     component: ParentView,
     meta: { jsonName: 'NavBarParentData.json' }
+  },
+  {
+    path: '/questionnaire-deploy/video',
+    name: 'فيديو',
+    component: VideoView,
+    meta: { jsonName: 'NavBarEleveData.json' }
   },
 ]
 

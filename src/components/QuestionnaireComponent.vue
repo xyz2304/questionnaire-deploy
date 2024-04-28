@@ -127,11 +127,6 @@ const selectOption = (question, option) => {
   handleOptionChange(question, option); // Appel de la méthode existante qui gère la validation
 };
 
-const getResponseClass = (questionUniqueId) => {
-  if (!responseGiven.value[questionUniqueId]) return '';
-  return selectedAnswers.value[questionUniqueId] === questions.value.find(q => q.uniqueId === questionUniqueId).correct_response ? 'btn-success' : 'btn-danger';
-};
-
 
 </script>
 <template>
@@ -143,65 +138,63 @@ const getResponseClass = (questionUniqueId) => {
       السلامة و مع العجلة الندامة😉
     </h4>
     <form @submit.prevent="submitAnswers">
-      <div v-for="question in questions.filter(q => q.id === 1)" :key="question.uniqueId" class="mb-3">
-        <div class="fw-bold">
-          <h4>{{ question.question }}</h4>
-        </div>
-        <div v-for="(option, i) in question.options" :key="i" class="form-check">
-          <input type="radio" class="form-check-input" :id="`question_${question.uniqueId}_option_${i}`"
-            :name="`question_${question.uniqueId}`" :value="option" :disabled="responseGiven[question.uniqueId]"
-            v-model="selectedAnswers[question.uniqueId]" @change="handleOptionChange(question, option)" />
-          <label class="form-check-label" :for="`question_${question.uniqueId}_option_${i}`">{{ option }}</label>
-          <!-- Icones de réponse juste ou fausse -->
-          <span v-if="responseGiven[question.uniqueId]" :class="{
+      <div v-for="question in questions" :key="question.uniqueId" class="mb-3">
+        <template v-if="question.id === 1">
+          <div class="fw-bold">
+            <h4>{{ question.question }}</h4>
+          </div>
+          <div v-for="(option, i) in question.options" :key="i" class="form-check">
+            <input type="radio" class="form-check-input" :id="`question_${question.uniqueId}_option_${i}`"
+              :name="`question_${question.uniqueId}`" :value="option" :disabled="responseGiven[question.uniqueId]"
+              v-model="selectedAnswers[question.uniqueId]" @change="handleOptionChange(question, option)" />
+            <label class="form-check-label" :for="`question_${question.uniqueId}_option_${i}`">{{ option }}</label>
+            <!-- Icones de réponse juste ou fausse -->
+            <span v-if="responseGiven[question.uniqueId]" :class="{
       'text-success': option === question.correct_response,
       'text-danger':
         selectedAnswers[question.uniqueId] === option &&
         option !== question.correct_response,
     }">
-            <template v-if="option === question.correct_response">✓</template>
-            <template v-if="selectedAnswers[question.uniqueId] === option &&
+              <template v-if="option === question.correct_response">✓</template>
+              <template v-if="selectedAnswers[question.uniqueId] === option &&
       option !== question.correct_response">✗</template>
-          </span>
-        </div>
-      </div>
+            </span>
+          </div>
+        </template>
 
-      <div v-for="question in questions.filter(q => q.id === 2)" :key="question.uniqueId" class="mb-3 text-center">
-        <div class="fw-bold">
-          <h4>{{ question.question }}</h4>
+        <template v-if="question.id ===2">
+          <div class="fw-bold">
+            <h4>{{ question.question }}</h4>
+          </div>
+          <!-- Bouton pour la réponse choisie, devient rouge si la réponse est incorrecte -->
+          <button v-if="responseGiven[question.uniqueId]" class="btn"
+            :class="{ 'btn-success btn-lg mx-1': selectedAnswers[question.uniqueId] === question.correct_response, 'btn-danger btn-lg mx-1': selectedAnswers[question.uniqueId] !== question.correct_response }">
+            {{ selectedAnswers[question.uniqueId] }}
+          </button>
+          <!-- Si la réponse donnée est incorrecte, montrer le bouton de la bonne réponse en vert -->
+          <button
+            v-if="responseGiven[question.uniqueId] && selectedAnswers[question.uniqueId] !== question.correct_response"
+            class="btn btn-success btn-lg mx-1">
+            {{ question.correct_response }}
+          </button>
+          <!-- Les boutons pour choisir une option, visibles uniquement avant qu'une réponse ne soit donnée -->
+          <div class="btn-group mt-2" v-if="!responseGiven[question.uniqueId]">
+            <button v-for="option in question.options" :key="option" class="btn btn-primary btn-lg mx-1" style="--bs-btn-font-weight: 600;"
+              @click="selectOption(question, option)">
+              {{ option }}
+            </button>
+          </div>
+        </template>
         </div>
-        <!-- Bouton pour la réponse choisie, devient rouge si la réponse est incorrecte -->
-        <button v-if="responseGiven[question.uniqueId]" class="btn"
-          :class="{ 'btn-success': selectedAnswers[question.uniqueId] === question.correct_response, 'btn-danger': selectedAnswers[question.uniqueId] !== question.correct_response }">
-          {{ selectedAnswers[question.uniqueId] }}
-        </button>
-        <!-- Si la réponse donnée est incorrecte, montrer le bouton de la bonne réponse en vert -->
-        <button
-          v-if="responseGiven[question.uniqueId] && selectedAnswers[question.uniqueId] !== question.correct_response"
-          class="btn btn-success">
-          {{ question.correct_response }}
-        </button>
-        <!-- Les boutons pour choisir une option, visibles uniquement avant qu'une réponse ne soit donnée -->
-        <div class="btn-group mt-2" v-if="!responseGiven[question.uniqueId]">
-          <button v-for="option in question.options" :key="option" class="btn btn-primary mx-1"
-            @click="selectOption(question, option)">
-            {{ option }}
+        <div class="mb-3">
+          <h5>إقترح نهاية جديدة لقصة : {{ titre }}</h5>
+          <textarea style="color:var(--bs-black);" v-model="inputText" rows="4" cols="50"></textarea>
+        </div>
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-primary" v-if="!isSubmitted">
+            أرسل الإجابات
           </button>
         </div>
-      </div>
-
-
-
-
-      <div class="mb-3">
-        <h5>إقترح نهاية جديدة لقصة : {{ titre }}</h5>
-        <textarea style="color:var(--bs-black);" v-model="inputText" rows="4" cols="50"></textarea>
-      </div>
-      <div class="text-center mt-3">
-        <button type="submit" class="btn btn-primary" v-if="!isSubmitted">
-          أرسل الإجابات
-        </button>
-      </div>
     </form>
     <div v-if="isSubmitted" class="result-animation">
       <img v-if="scorePercentage < 50" src="@/gifs/failure.gif" alt="Result Animation Failure" />
@@ -264,15 +257,6 @@ const getResponseClass = (questionUniqueId) => {
   margin-top: 10px;
 }
 
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 20px;
-  cursor: pointer;
-}
-
 .text-center {
   text-align: center;
 }
@@ -294,5 +278,31 @@ textarea {
   background-color: #fafafa;
   resize: vertical;
   font-family: Arial, sans-serif;
+}
+
+
+
+
+
+.answers {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+
+.answer-slot {
+  width: 200px;
+  min-height: 30px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.draggable-answer {
+  padding: 5px 10px;
+  margin-right: 5px;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  cursor: pointer;
 }
 </style>

@@ -81,19 +81,6 @@ const login = () => {
   border-radius: 0.5rem;
 }
 
-.btn-primary {
-  background-color: #4caf50;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 1.2rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-}
-
-.btn-primary:hover {
-  background-color: #45a049;
-}
-
 .form-check-label {
   font-size: 1.2rem;
 }

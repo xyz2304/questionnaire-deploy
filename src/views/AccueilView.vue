@@ -1,7 +1,6 @@
 <script setup>
 import livres from "@/data/livresData.json";
 import NavBar from "@/components/NavBarComponent.vue";
-import { RouterLink } from "vue-router";
 </script>
 
 <template>
@@ -22,7 +21,6 @@ import { RouterLink } from "vue-router";
           <div class="card h-100 text-center"> <!-- Ajout de text-center pour centrer le texte et les images -->
             <div class="card-header">
               <h5 class="card-title">{{ livre.titre }}</h5>
-              <RouterLink v-if="livre.video" to="/questionnaire-deploy/video">أنقر لمشاهدة الفيديو</RouterLink>
             </div>
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
               <!-- Flexbox pour centrer verticalement et horizontalement -->

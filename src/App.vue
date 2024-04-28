@@ -5,7 +5,6 @@ import AccueilView from "@/views/AccueilView.vue";
 import ParentView from "@/views/ParentView.vue";
 import EleveView from "@/views/EleveView.vue";
 import ConnexionView from "@/views/ConnexionView.vue";
-import VideoView from "@/views/VideoView.vue";
 
 const route = useRoute();
 const viewsMapping = {
@@ -13,7 +12,6 @@ const viewsMapping = {
   وليّ: ParentView,
   تلميذ: EleveView,
   تسجيل: ConnexionView,
-  فيديو: VideoView
 };
 const currentView = computed(() => viewsMapping[route.name]);
 </script>

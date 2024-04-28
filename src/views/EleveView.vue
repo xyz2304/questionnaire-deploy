@@ -6,6 +6,10 @@ import QuestionnaireComponent from "@/components/QuestionnaireComponent.vue";
 import ColoriageComponent from "@/components/ColoriageComponent.vue";
 const router = useRouter();
 
+const videoOpen = ref(false);
+const togglevideo = () => {
+  videoOpen.value = !videoOpen.value
+}
 // Vérification de l'autorisation de l'utilisateur
 const userStatus = localStorage.getItem("userStatus");
 if (!userStatus || userStatus !== "eleve_ok") {
@@ -19,12 +23,14 @@ const questionnaires = ref([
     json: "questionsDonaldData",
     image: "assets/donald.webp",
     selected: false,
+    video: true
   },
   {
     name: "حلم فراشة",
     json: "questionsPapillonData",
     image: "assets/papillon.jpg",
     selected: false,
+    video: false
   },
 ]);
 
@@ -49,44 +55,37 @@ const selectColoriageQuestions = (jsonName, imagePath) => {
   </header>
   <main class="flex-shrink-0 container mt-5">
     <div class="row">
-      <div
-        class="col-md-6 mb-4"
-        v-for="questionnaire in questionnaires"
-        :key="questionnaire.name"
-      >
+      <div class="col-md-6 mb-4" v-for="questionnaire in questionnaires" :key="questionnaire.name">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">
               {{ `أسئلة القصة ${questionnaire.name}` }}
             </h5>
-            <button
-              @click="
-                selectColoriageQuestions(
-                  questionnaire.json,
-                  questionnaire.image
-                )
-              "
-            >
+            <button @click="
+        selectColoriageQuestions(
+          questionnaire.json,
+          questionnaire.image
+        )
+        ">
               أنقر لتبدأ الإجابة عن الأسئلة
             </button>
           </div>
         </div>
       </div>
     </div>
-    <div
-      v-for="questionnaire in questionnaires"
-      :key="`details-${questionnaire.json}`"
-    >
-      <QuestionnaireComponent
-        id="questionnaire"
-        v-if="questionnaire.selected"
-        :json-name="questionnaire.json"
-        class="questionnaire-display"
-      />
-      <ColoriageComponent
-        v-if="selectedColoriage && questionnaire.selected"
-        :image-path="selectedColoriage"
-      />
+    <div v-for="questionnaire in questionnaires" :key="`details-${questionnaire.json}`">
+      <div v-if="questionnaire.video" >
+        <button v-if="!videoOpen" class="btn btn-secondary" @click="togglevideo">مشاهدة الفيديو</button>
+        <button v-if="videoOpen" class="btn btn-secondary" @click="togglevideo">إغلاق
+          الفيديو</button>
+        <video v-if="videoOpen" controls>
+          <source src="/public/assets/videos/donaldStory.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      <QuestionnaireComponent id="questionnaire" v-if="questionnaire.selected" :json-name="questionnaire.json"
+        class="questionnaire-display" />
+      <ColoriageComponent v-if="selectedColoriage && questionnaire.selected" :image-path="selectedColoriage" />
     </div>
   </main>
 </template>

@@ -75,14 +75,13 @@ const selectColoriageQuestions = (jsonName, imagePath) => {
     </div>
     <div v-for="questionnaire in questionnaires" :key="`details-${questionnaire.json}`">
       <div v-if="questionnaire.video" >
-        <button v-if="!videoOpen" class="btn btn-secondary" @click="togglevideo">مشاهدة الفيديو</button>
+        <button v-if="!videoOpen" class="btn btn-secondary" @click="togglevideo">مشاهدة فيديو قصة بطوط يبحث عن مهنة</button>
         <button v-if="videoOpen" class="btn btn-secondary" @click="togglevideo">إغلاق
           الفيديو</button>
         <video v-if="videoOpen" controls>
           <source src="/public/assets/videos/donaldStory.mp4" type="video/mp4" />
         </video>
       </div>
-
       <QuestionnaireComponent id="questionnaire" v-if="questionnaire.selected" :json-name="questionnaire.json"
         class="questionnaire-display" />
       <ColoriageComponent v-if="selectedColoriage && questionnaire.selected" :image-path="selectedColoriage" />
